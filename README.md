@@ -44,7 +44,7 @@ The application will be available at http://localhost:3000.
 
 ## Architecture Overview
 
-`	ext
+```	ext
 src/
   app/            # App Router pages and route groups
   components/     # Shared and UI components
@@ -58,7 +58,7 @@ src/
   services/       # API service abstractions
   store/          # Zustand global state stores
   types/          # TypeScript type definitions
-`
+```
 
 ## Features Included in Foundation
 
