@@ -9,10 +9,14 @@ export const api = axios.create({
   },
 });
 
-// Request interceptor scaffolding
+// Request interceptor
 api.interceptors.request.use(
   (config) => {
-    // Add auth token here later
+    // In the future, get token from zustand store or cookies
+    // const token = useAuthStore.getState().token;
+    // if (token) {
+    //   config.headers.Authorization = `Bearer ${token}`;
+    // }
     return config;
   },
   (error) => {
@@ -20,11 +24,14 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor scaffolding
+// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle global errors like 401, 500 etc.
+    // Handle global errors
+    if (error.response?.status === 401) {
+      // Handle logout/refresh token logic
+    }
     return Promise.reject(error);
   }
 );
