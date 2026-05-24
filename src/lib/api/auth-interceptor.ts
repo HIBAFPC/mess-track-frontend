@@ -69,15 +69,20 @@ export const setupInterceptors = () => {
       }
 
       try {
-        const { access } = await authApi.refreshToken(refreshToken);
+        const tokens = await authApi.refreshToken(refreshToken);
         
-        useAuthStore.getState().setAccessToken(access);
+        // Handle token rotation if refresh token is provided
+        if (tokens.refresh) {
+          tokenStorage.saveRefreshToken(tokens.refresh);
+        }
+
+        useAuthStore.getState().setAccessToken(tokens.access);
         
         if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${access}`;
+          originalRequest.headers.Authorization = `Bearer ${tokens.access}`;
         }
         
-        processQueue(null, access);
+        processQueue(null, tokens.access);
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);

@@ -27,16 +27,17 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
       try {
         // Attempt to get a fresh access token
-        const { access } = await authApi.refreshToken(refreshToken);
+        const tokens = await authApi.refreshToken(refreshToken);
         
-        // With valid access token, get current user
-        // We need to manually set the token in the store first so the getCurrentUser call has it
-        // Or we can just use the authApi directly if it doesn't rely on interceptors for this specific call
-        // but it does. Let's update the store first.
-        useAuthStore.getState().setAccessToken(access);
+        // Save new refresh token if backend provided one (rotation)
+        if (tokens.refresh) {
+          tokenStorage.saveRefreshToken(tokens.refresh);
+        }
+
+        useAuthStore.getState().setAccessToken(tokens.access);
         
         const user = await authApi.getCurrentUser();
-        setAuth(user, access);
+        setAuth(user, tokens.access);
       } catch (error) {
         console.error('Failed to initialize auth:', error);
         tokenStorage.clearRefreshToken();

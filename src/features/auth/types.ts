@@ -1,14 +1,13 @@
-export type UserRole = 'admin' | 'manager' | 'member';
+export type UserRole = 'SUPER_ADMIN' | 'MESS_ADMIN' | 'RESIDENT';
 
 export interface User {
   id: string;
   email: string;
   first_name: string;
   last_name: string;
+  phone_number?: string;
   role: UserRole;
-  avatar?: string;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
 }
 
 export interface AuthTokens {
@@ -16,9 +15,20 @@ export interface AuthTokens {
   refresh: string;
 }
 
-export interface AuthResponse extends AuthTokens {
-  user: User;
+export interface BaseResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
 }
+
+export interface AuthData {
+  user: User;
+  tokens: AuthTokens;
+}
+
+export type AuthResponse = BaseResponse<AuthData>;
+export type RefreshResponse = BaseResponse<AuthTokens>;
+export type UserResponse = BaseResponse<User>;
 
 export interface LoginPayload {
   email: string;
@@ -30,20 +40,11 @@ export interface RegisterPayload {
   password: string;
   first_name: string;
   last_name: string;
-}
-
-export interface RefreshResponse {
-  access: string;
+  phone_number?: string;
 }
 
 export interface ApiErrorResponse {
   detail?: string;
   code?: string;
-  messages?: Array<{
-    message: string;
-    token_class?: string;
-    token_type?: string;
-    user_id?: string;
-  }>;
   [key: string]: any;
 }

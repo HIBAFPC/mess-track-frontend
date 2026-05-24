@@ -11,8 +11,8 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: (payload: LoginPayload) => authApi.login(payload),
     onSuccess: (data) => {
-      tokenStorage.saveRefreshToken(data.refresh);
-      setAuth(data.user, data.access);
+      tokenStorage.saveRefreshToken(data.tokens.refresh);
+      setAuth(data.user, data.tokens.access);
       queryClient.setQueryData(['currentUser'], data.user);
     },
   });
@@ -25,8 +25,8 @@ export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: (payload: RegisterPayload) => authApi.register(payload),
     onSuccess: (data) => {
-      tokenStorage.saveRefreshToken(data.refresh);
-      setAuth(data.user, data.access);
+      tokenStorage.saveRefreshToken(data.tokens.refresh);
+      setAuth(data.user, data.tokens.access);
       queryClient.setQueryData(['currentUser'], data.user);
     },
   });
